@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		boardCols = 15,
 		boardRows = 10,
 		boardCells,
+		boardDirty,
 		posDeath,
 		posCat,
 		mouseMode;
@@ -68,6 +69,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		placeCat(0, true);
 		placeDeath(boardCells.length - 1, true);
 
+		boardDirty = true;
 		btnCat.click();
 
 	}
@@ -124,9 +126,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	// ---------------------------------------------------------------
 	function clickCell() {
-		var nr = parseInt(this.dataset.nr);
+		var nr = parseInt(this.dataset.nr),
+			i;
 
 		console.table(this.dataset); // FIXME
+
+		// czyszczenie planszy
+		if (boardDirty) {
+
+			for (i = 0; i < boardCells.length; i++) {
+				if (boardCells[i].dataset.type == CELL_EMPTY) {
+					boardCells[i].innerHTML = '';
+				}
+			}
+
+			boardDirty = false;
+
+		}
 
 		switch (mouseMode) {
 
@@ -227,13 +243,6 @@ document.addEventListener('DOMContentLoaded', function() {
 			backtrace = [],
 			current, neighbours, check, path, i;
 
-		// czyszczenie planszy
-		for (i = 0; i < boardCells.length; i++) {
-			if (boardCells[i].dataset.type == CELL_EMPTY) {
-				boardCells[i].innerHTML = '';
-			}
-		}
-
 		// inicjalizacja tablicy odwiedzonych komórek (przeszkody jako odwiedzone)
 		for (i = 0; i < boardCells.length; i++) {
 			if (boardCells[i].dataset.type == CELL_WALL) {
@@ -264,7 +273,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 			// punkt na planszy
 			if (current != start) {
-				boardCells[current].innerHTML = '&middot;';
+				boardCells[current].innerHTML = '&#128062;';
 			}
 
 			// pobranie listy wszystkich sąsiadów
@@ -296,21 +305,25 @@ document.addEventListener('DOMContentLoaded', function() {
 		if (current == goal) {
 
 			// odtwarzamy ścieżkę od końca do początku
-			path = [goal];
+			path = [ goal ];
 			current = goal;
 			while (current != start) {
 				current = backtrace[current];
-				path.push(current);
+				path.unshift(current);
 			}
 
 			// gotowa ścieżka
 			if (path.length > 2) {
+
 				for (i = 1; i < path.length - 1; i++) {
-					boardCells[path[i]].innerHTML = '&#128062;';
+					boardCells[path[i]].innerHTML = i;
 				}
+
+				boardDirty = true;
+
 			}
 
-			console.log(path.reverse()); // FIXME
+			console.log(path); // FIXME
 
 		}
 
