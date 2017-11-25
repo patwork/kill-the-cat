@@ -1,0 +1,14 @@
+{
+  "name": "kill-the-cat",
+  "version": "1.0.0",
+  "description": "Let's kill the cat",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "patwork@gmail.com",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^4.11.0"
+  }
+}
