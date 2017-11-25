@@ -129,8 +129,6 @@ document.addEventListener('DOMContentLoaded', function() {
 		var nr = parseInt(this.dataset.nr),
 			i;
 
-		console.table(this.dataset); // FIXME
-
 		// czyszczenie planszy
 		if (boardDirty) {
 
@@ -322,8 +320,6 @@ document.addEventListener('DOMContentLoaded', function() {
 				boardDirty = true;
 
 			}
-
-			console.log(path); // FIXME
 
 		}
 
