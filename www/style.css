@@ -1,0 +1,54 @@
+html,
+body {
+	margin: 0;
+	padding: 0;
+	background: white;
+	font-size: 14px;
+}
+
+button {
+	width: 2em;
+	height: 2em;
+	font-size: 200%;
+	line-height: 100%;
+}
+
+button.action {
+	color: orange;
+}
+
+button.selected {
+	background: lightgreen;
+}
+
+ul.ui {
+	margin: 0;
+	padding: 0;
+}
+
+ul.ui li {
+	margin: 0;
+	padding: 0 1em 0 0;
+	display: table-cell;
+	list-style: none;
+}
+
+.container {
+	margin: 1em;
+	padding: 0;
+}
+
+.cell {
+	margin: 0;
+	padding: 0;
+	width: 3em;
+	height: 3em;
+	display: table-cell;
+	text-align: center;
+	vertical-align: middle;
+	border: 1px solid lightgray;
+}
+
+.cell:hover {
+	background: lightgray;
+}
