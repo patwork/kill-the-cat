@@ -13,8 +13,8 @@ document.addEventListener('DOMContentLoaded', function() {
 		btnWall = document.getElementById('btn_wall'),
 		btnStart = document.getElementById('btn_start'),
 		btnReset = document.getElementById('btn_reset'),
-		boardRows = 10,
 		boardCols = 15,
+		boardRows = 10,
 		boardCells,
 		posDeath,
 		posCat,
@@ -183,12 +183,137 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	// ---------------------------------------------------------------
 	function clickStart() {
-		console.log('start!');
+		findPath(posCat, posDeath);
 	}
 
 	// ---------------------------------------------------------------
 	function clickReset() {
 		resetBoard();
+	}
+
+	// ---------------------------------------------------------------
+	function findNeighbours(pos) {
+		var x = boardCells[pos].dataset.x,
+			y = boardCells[pos].dataset.y,
+			neighbours = [];
+
+		// kierunek w lewo
+		if (x > 0) {
+			neighbours.push(pos - 1);
+		}
+
+		// kierunek w prawo
+		if (x < boardCols - 1) {
+			neighbours.push(pos + 1);
+		}
+
+		// kierunek w górę
+		if (y > 0) {
+			neighbours.push(pos - boardCols);
+		}
+
+		// kierunek w dół
+		if (y < boardRows - 1) {
+			neighbours.push(pos + boardCols);
+		}
+
+		return neighbours;
+	}
+
+	// ---------------------------------------------------------------
+	function findPath(start, goal) {
+		var queue = [],
+			visited = [],
+			backtrace = [],
+			current, neighbours, check, path, i;
+
+		// czyszczenie planszy
+		for (i = 0; i < boardCells.length; i++) {
+			if (boardCells[i].dataset.type == CELL_EMPTY) {
+				boardCells[i].innerHTML = '';
+			}
+		}
+
+		// inicjalizacja tablicy odwiedzonych komórek (przeszkody jako odwiedzone)
+		for (i = 0; i < boardCells.length; i++) {
+			if (boardCells[i].dataset.type == CELL_WALL) {
+				visited.push(true);
+			} else {
+				visited.push(false);
+			}
+		}
+
+		// inicjalizacja tablicy historii ścieżki
+		for (i = 0; i < boardCells.length; i++) {
+			backtrace.push(-1);
+		}
+
+		// pozycja startowa do kolejki
+		queue = [start];
+
+		// pętla po kolejce pól do sprawdzenia
+		while (queue.length > 0) {
+
+			// pobranie pierwszego pola z listy
+			current = queue.shift();
+
+			// czy dotarliśmy do celu?
+			if (current == goal) {
+				break;
+			}
+
+			// punkt na planszy
+			if (current != start) {
+				boardCells[current].innerHTML = '&middot;';
+			}
+
+			// pobranie listy wszystkich sąsiadów
+			neighbours = findNeighbours(current);
+
+			// pętla po sąsiadujących polach
+			for (i = 0; i < neighbours.length; i++) {
+				check = neighbours[i];
+
+				// czy pole nie było jeszcze odwiedzone?
+				if (visited[check] == false) {
+
+					// zaznaczenie flagi odwiedzenia pola
+					visited[check] = true;
+
+					// zapamiętanie z którego pola tu trafiliśmy
+					backtrace[check] = current;
+
+					// dodanie pola do listy do sprawdzenia
+					queue.push(check);
+
+				}
+
+			}
+
+		}
+
+		// czy znaleźliśmy drogę do celu?
+		if (current == goal) {
+
+			// odtwarzamy ścieżkę od końca do początku
+			path = [goal];
+			current = goal;
+			while (current != start) {
+				current = backtrace[current];
+				path.push(current);
+			}
+
+			// gotowa ścieżka
+			if (path.length > 2) {
+				for (i = 1; i < path.length - 1; i++) {
+					boardCells[path[i]].innerHTML = '&#128062;';
+				}
+			}
+
+			console.log(path.reverse()); // FIXME
+
+		}
+
 	}
 
 	// ---------------------------------------------------------------
