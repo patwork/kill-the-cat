@@ -303,7 +303,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		if (current == goal) {
 
 			// odtwarzamy ścieżkę od końca do początku
-			path = [ goal ];
+			path = [goal];
 			current = goal;
 			while (current != start) {
 				current = backtrace[current];
@@ -314,7 +314,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			if (path.length > 2) {
 
 				for (i = 1; i < path.length - 1; i++) {
-					boardCells[path[i]].innerHTML = i;
+					boardCells[path[i]].innerHTML = '<span>' + i + '</span>';
 				}
 
 				boardDirty = true;
